@@ -13,5 +13,5 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <logger name="com.company.watermark" level="DEBUG"/>
+    <logger name="com.yushkevich.watermark.java" level="DEBUG"/>
 </configuration>

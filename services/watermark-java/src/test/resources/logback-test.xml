@@ -13,6 +13,6 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <logger name="com.company.watermark" level="DEBUG"/>
+    <logger name="com.yushkevich.watermark" level="DEBUG"/>
     <logger name="org.springframework.transaction.interceptor" level="TRACE"/>
 </configuration>
