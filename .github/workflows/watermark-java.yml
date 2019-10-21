@@ -1,4 +1,4 @@
-name: Java CI
+name: watermark-java
 
 on:
   push:
