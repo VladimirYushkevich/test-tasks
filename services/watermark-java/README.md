@@ -72,4 +72,4 @@ curl -X GET --header 'Accept: application/json' 'http://localhost:8080/publicati
 ### Environment
 
 macOS Sierra (version 10.12.1)  
-Java(TM) SE Runtime Environment (build 1.8.0_92-b14)
+Java(TM) SE Runtime Environment (build 1.8.0_172-b11)
