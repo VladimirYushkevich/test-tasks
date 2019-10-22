@@ -67,7 +67,7 @@ public class WatermarkCommandTest {
     private void delayWatermarkClient(long timeout) {
         doAnswer(invocation -> {
             Thread.sleep(timeout);
-            return "watermark";
+            return "watermark1";
         }).when(watermarkClient).createWatermark(any());
     }
 
