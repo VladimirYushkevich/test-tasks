@@ -1,6 +1,5 @@
 package com.yushkevich.watermark.java.service.impl;
 
-import com.yushkevich.watermark.java.client.WatermarkClient;
 import com.yushkevich.watermark.java.domain.Content;
 import com.yushkevich.watermark.java.domain.Publication;
 import com.yushkevich.watermark.java.domain.Watermark;
@@ -9,7 +8,6 @@ import com.yushkevich.watermark.java.service.PublicationService;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +26,6 @@ public abstract class BasePublicationServiceIT {
 
     @Autowired
     protected PublicationService publicationService;
-    @MockBean
-    private WatermarkClient watermarkClient;
 
     protected void testPublicationCrudOperations(Content content, String watermarkProperty) {
         //create

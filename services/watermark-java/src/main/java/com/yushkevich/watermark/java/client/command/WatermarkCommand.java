@@ -28,8 +28,6 @@ public class WatermarkCommand extends BaseCommand<String> {
         super(groupKey, timeout, debugMessage);
         this.watermarkProperties = watermarkProperties;
         this.watermarkClient = watermarkClient;
-
-        log.debug("Created command with timeout: {} ms", timeout);
     }
 
     /**

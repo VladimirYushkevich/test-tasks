@@ -3,7 +3,6 @@ package com.yushkevich.watermark.java.client.command;
 import com.yushkevich.watermark.java.client.WatermarkClient;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,6 +28,7 @@ public class WatermarkCommandTest {
     public void setUp() {
         watermarkCommand = new WatermarkCommand("Tests", 2000, "testWatermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
+        System.out.println(watermarkCommand.getProperties().executionTimeoutEnabled().get());
     }
 
     @Test
