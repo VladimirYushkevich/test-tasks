@@ -28,6 +28,7 @@ public class WatermarkClientTest {
         watermarkClient.createWatermark(Arrays.asList("book", "authorBook", "titleBook", "Science"));
         final int creationTime = (int) (System.currentTimeMillis() - start);
 
+        System.out.println(creationTime);
         assertThat(creationTime, greaterThan(WATERMARK_TIMEOUT));
         assertThat(creationTime, lessThan(WATERMARK_TIMEOUT + 200));
     }
