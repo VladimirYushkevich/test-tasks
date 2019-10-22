@@ -17,18 +17,17 @@ public class WatermarkClientTest {
     private static final int WATERMARK_TIMEOUT = 1000;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ReflectionTestUtils.setField(watermarkClient, "watermarkTimeOut", WATERMARK_TIMEOUT);
     }
 
     @Test
-    public void testCreateWatermark() throws Exception {
+    public void testCreateWatermark() {
         final long start = System.currentTimeMillis();
 
         watermarkClient.createWatermark(Arrays.asList("book", "authorBook", "titleBook", "Science"));
         final int creationTime = (int) (System.currentTimeMillis() - start);
 
-        System.out.println(creationTime);
         assertThat(creationTime, greaterThan(WATERMARK_TIMEOUT));
         assertThat(creationTime, lessThan(WATERMARK_TIMEOUT + 200));
     }
