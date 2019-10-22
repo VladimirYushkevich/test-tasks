@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -47,10 +48,10 @@ public class WatermarkCommandTest {
     public void testWatermarkDocument_clientTimeOut() throws Exception {
         delayWatermarkClient(3000L);
 
-        System.out.println("before delay");
+        System.out.println("before delay " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
-        System.out.println("after delay");
+        System.out.println("after delay " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
 
         assertThat(watermarkProperty, is(""));
     }
