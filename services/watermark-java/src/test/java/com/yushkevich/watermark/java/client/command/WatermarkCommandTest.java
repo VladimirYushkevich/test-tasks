@@ -26,8 +26,6 @@ public class WatermarkCommandTest {
 
     @Before
     public void setUp() {
-        when(watermarkClient.createWatermark(any())).thenReturn("watermark");
-
         watermarkCommand = new WatermarkCommand("Tests", 2000, "watermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
     }
@@ -35,6 +33,8 @@ public class WatermarkCommandTest {
     @Test
     @Ignore
     public void testWatermarkDocument_success() throws Exception {
+        when(watermarkClient.createWatermark(any())).thenReturn("watermark");
+
         delayWatermarkClient(1000L);
 
         String watermarkProperty = watermarkCommand.observe()
@@ -47,6 +47,7 @@ public class WatermarkCommandTest {
     public void testWatermarkDocument_clientTimeOut() throws Exception {
         delayWatermarkClient(3000L);
 
+        System.out.println("after delay");
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
 
@@ -67,7 +68,7 @@ public class WatermarkCommandTest {
     private void delayWatermarkClient(long timeout) {
         doAnswer(invocation -> {
             Thread.sleep(timeout);
-            return "watermark1";
+            return "watermark";
         }).when(watermarkClient).createWatermark(any());
     }
 
