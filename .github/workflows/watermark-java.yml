@@ -3,7 +3,7 @@ name: watermark-java
 on:
   push:
     paths:
-      - 'services/watermark-java/*'
+      - 'services/watermark-java/**'
 
 jobs:
   build:
