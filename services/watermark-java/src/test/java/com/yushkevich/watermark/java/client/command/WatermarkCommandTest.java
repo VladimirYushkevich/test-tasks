@@ -28,7 +28,6 @@ public class WatermarkCommandTest {
     public void setUp() {
         watermarkCommand = new WatermarkCommand("Tests", 2000, "testWatermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
-        System.out.println(watermarkCommand.getProperties().executionTimeoutEnabled().get());
     }
 
     @Test
