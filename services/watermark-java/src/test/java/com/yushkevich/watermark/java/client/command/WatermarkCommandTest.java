@@ -32,7 +32,6 @@ public class WatermarkCommandTest {
     }
 
     @Test
-    @Ignore
     public void testWatermarkDocument_success() throws Exception {
         when(watermarkClient.createWatermark(any())).thenReturn("watermark");
 
@@ -57,7 +56,6 @@ public class WatermarkCommandTest {
     }
 
     @Test
-    @Ignore
     public void testWatermarkDocument_clientException() throws Exception {
         when(watermarkClient.createWatermark(any())).thenThrow(new RuntimeException("Watermark client failed"));
 
