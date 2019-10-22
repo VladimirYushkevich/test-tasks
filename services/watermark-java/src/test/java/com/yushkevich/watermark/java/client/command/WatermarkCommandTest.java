@@ -24,16 +24,16 @@ public class WatermarkCommandTest {
     private WatermarkCommand watermarkCommand;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         when(watermarkClient.createWatermark(any())).thenReturn("watermark");
 
-        watermarkCommand = new WatermarkCommand("Tests", 1000, "watermarkDocument",
+        watermarkCommand = new WatermarkCommand("Tests", 2000, "watermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
     }
 
     @Test
     public void testWatermarkDocument_success() throws Exception {
-        delayWatermarkClient(500L);
+        delayWatermarkClient(1000L);
 
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
@@ -43,7 +43,7 @@ public class WatermarkCommandTest {
 
     @Test
     public void testWatermarkDocument_clientTimeOut() throws Exception {
-        delayWatermarkClient(2000L);
+        delayWatermarkClient(3000L);
 
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
@@ -71,5 +71,6 @@ public class WatermarkCommandTest {
     @After
     public void tearDown() throws Exception {
         reset(watermarkClient);
+        Thread.sleep(1000L);
     }
 }
