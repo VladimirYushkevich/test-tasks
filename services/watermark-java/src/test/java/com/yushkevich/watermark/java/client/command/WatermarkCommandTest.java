@@ -26,6 +26,7 @@ public class WatermarkCommandTest {
 
     @Before
     public void setUp() {
+        reset(watermarkClient);
         watermarkCommand = new WatermarkCommand("Tests", 2000, "testWatermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
     }
