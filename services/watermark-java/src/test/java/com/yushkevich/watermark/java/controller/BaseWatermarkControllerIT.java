@@ -126,7 +126,7 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
             if (isFailed) {
                 throw new RuntimeException("Watermark client failed");
             }
-            return "watermark";
+            return "watermarkIT";
         }).when(watermarkClient).createWatermark(any());
     }
 
@@ -134,6 +134,6 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
     public void tearDown() throws Exception {
         reset(watermarkClient);
         //allow main thread to write everything in log
-        Thread.sleep(4000L);
+        Thread.sleep(1000L);
     }
 }

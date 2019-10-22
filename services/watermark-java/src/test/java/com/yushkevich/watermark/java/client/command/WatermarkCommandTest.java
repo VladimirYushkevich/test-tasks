@@ -39,7 +39,7 @@ public class WatermarkCommandTest {
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
 
-        assertThat(watermarkProperty, is("watermark"));
+        assertThat(watermarkProperty, is("watermarkTest"));
     }
 
     @Test
@@ -67,13 +67,13 @@ public class WatermarkCommandTest {
     private void delayWatermarkClient(long timeout) {
         doAnswer(invocation -> {
             Thread.sleep(timeout);
-            return "watermark";
+            return "watermarkTest";
         }).when(watermarkClient).createWatermark(any());
     }
 
     @After
     public void tearDown() throws Exception {
         reset(watermarkClient);
-        Thread.sleep(4000L);
+        Thread.sleep(1000L);
     }
 }
