@@ -75,6 +75,6 @@ public class WatermarkCommandTest {
     @After
     public void tearDown() throws Exception {
         reset(watermarkClient);
-        Thread.sleep(1000L);
+        Thread.sleep(4000L);
     }
 }
