@@ -1,5 +1,6 @@
 package com.yushkevich.watermark.java.controller;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.yushkevich.watermark.java.domain.Content.BOOK;
@@ -7,6 +8,7 @@ import static com.yushkevich.watermark.java.domain.Content.JOURNAL;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
+@Ignore
 public class WatermarkControllerIT extends BaseWatermarkControllerIT {
 
     @Test
