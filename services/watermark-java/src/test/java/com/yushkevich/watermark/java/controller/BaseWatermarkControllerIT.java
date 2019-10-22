@@ -125,7 +125,7 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
         doAnswer(invocation -> {
             Thread.sleep(timeout);
             if (isFailed) {
-                throw new RuntimeException("Watermark client failed");
+                throw new RuntimeException("Watermark client failed1");
             }
             return "watermark";
         }).when(watermarkClient).createWatermark(any());
