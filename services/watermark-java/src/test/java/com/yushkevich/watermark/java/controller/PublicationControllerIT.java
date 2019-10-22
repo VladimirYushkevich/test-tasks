@@ -1,8 +1,7 @@
 package com.yushkevich.watermark.java.controller;
 
-import com.yushkevich.watermark.java.dto.PublicationDTO;
 import com.google.common.collect.Lists;
-import org.junit.Ignore;
+import com.yushkevich.watermark.java.dto.PublicationDTO;
 import org.junit.Test;
 
 import static com.yushkevich.watermark.java.domain.Content.BOOK;
@@ -10,7 +9,6 @@ import static com.yushkevich.watermark.java.domain.Content.JOURNAL;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-@Ignore
 public class PublicationControllerIT extends BasePublicationControllerIT {
 
     @Test

@@ -28,13 +28,12 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
     private WatermarkClient watermarkClient;
 
     @Before
-    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         super.setUp();
     }
 
-    protected void testWatermarkPublicationAsync_success(PublicationDTO publicationDTO, Content content,
-                                                         Matcher<Object> topicMatcher) throws Exception {
+    void testWatermarkPublicationAsync_success(PublicationDTO publicationDTO, Content content,
+                                               Matcher<Object> topicMatcher) throws Exception {
         //given
         delayWatermarkClient(500L, false);
         //when
@@ -45,8 +44,8 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
         triggerWatermarkCreationAndVerifyTicketId(publicationId2, content);
     }
 
-    protected void testWatermarkTicketStatusFlow_success_updateAllowedAfterSuccess(PublicationDTO publicationDTO, Content content,
-                                                                                   Matcher<Object> topicMatcher) throws Exception {
+    void testWatermarkTicketStatusFlow_success_updateAllowedAfterSuccess(PublicationDTO publicationDTO, Content content,
+                                                                         Matcher<Object> topicMatcher) throws Exception {
         //given
         delayWatermarkClient(500L, false);
 
@@ -63,8 +62,8 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
         pollAndVerifyTicketStatus(ticketId, NEW, nullValue());
     }
 
-    protected void testWatermarkTicketStatusFlow_success_updateAllowedAfterFail(PublicationDTO publicationDTO, Content content,
-                                                                                Matcher<Object> topicMatcher) throws Exception {
+    void testWatermarkTicketStatusFlow_success_updateAllowedAfterFail(PublicationDTO publicationDTO, Content content,
+                                                                      Matcher<Object> topicMatcher) throws Exception {
         //given
         delayWatermarkClient(500L, true);
 
@@ -81,8 +80,8 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
         pollAndVerifyTicketStatus(ticketId, NEW, nullValue());
     }
 
-    protected void testWatermarkTicketStatusFlow_fail_updateNotAllowed(PublicationDTO publicationDTO, Content content,
-                                                                       Matcher<Object> topicMatcher) throws Exception {
+    void testWatermarkTicketStatusFlow_fail_updateNotAllowed(PublicationDTO publicationDTO, Content content,
+                                                             Matcher<Object> topicMatcher) throws Exception {
         //given
         delayWatermarkClient(500L, true);
 
@@ -135,6 +134,6 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
     public void tearDown() throws Exception {
         reset(watermarkClient);
         //allow main thread to write everything in log
-        Thread.sleep(1000L);
+        Thread.sleep(4000L);
     }
 }
