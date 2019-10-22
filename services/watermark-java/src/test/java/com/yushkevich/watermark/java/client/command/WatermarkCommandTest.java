@@ -26,11 +26,12 @@ public class WatermarkCommandTest {
 
     @Before
     public void setUp() {
-        watermarkCommand = new WatermarkCommand("Tests", 2000, "watermarkDocument",
+        watermarkCommand = new WatermarkCommand("Tests", 2000, "testWatermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
     }
 
     @Test
+    @Ignore
     public void testWatermarkDocument_success() throws Exception {
         when(watermarkClient.createWatermark(any())).thenReturn("watermark");
 
@@ -43,7 +44,6 @@ public class WatermarkCommandTest {
     }
 
     @Test
-    @Ignore
     public void testWatermarkDocument_clientTimeOut() throws Exception {
         delayWatermarkClient(3000L);
 
@@ -56,6 +56,7 @@ public class WatermarkCommandTest {
     }
 
     @Test
+    @Ignore
     public void testWatermarkDocument_clientException() throws Exception {
         when(watermarkClient.createWatermark(any())).thenThrow(new RuntimeException("Watermark client failed"));
 
