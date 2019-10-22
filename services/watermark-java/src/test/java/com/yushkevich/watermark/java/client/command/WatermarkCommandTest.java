@@ -3,6 +3,7 @@ package com.yushkevich.watermark.java.client.command;
 import com.yushkevich.watermark.java.client.WatermarkClient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,6 +33,7 @@ public class WatermarkCommandTest {
     }
 
     @Test
+    @Ignore
     public void testWatermarkDocument_success() throws Exception {
         delayWatermarkClient(1000L);
 
@@ -52,6 +54,7 @@ public class WatermarkCommandTest {
     }
 
     @Test
+    @Ignore
     public void testWatermarkDocument_clientException() throws Exception {
         when(watermarkClient.createWatermark(any())).thenThrow(new RuntimeException("Watermark client failed"));
 
