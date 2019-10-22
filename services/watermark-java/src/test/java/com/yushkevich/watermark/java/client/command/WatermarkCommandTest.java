@@ -48,10 +48,10 @@ public class WatermarkCommandTest {
     public void testWatermarkDocument_clientTimeOut() throws Exception {
         delayWatermarkClient(3000L);
 
-        System.out.println("before delay " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
+        System.out.println("before delay: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
-        System.out.println("after delay " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
+        System.out.println("after delay: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
 
         assertThat(watermarkProperty, is(""));
     }
