@@ -23,7 +23,7 @@ import static com.yushkevich.watermark.java.utils.WatermarkGenerator.generateWat
 @Component
 @AllArgsConstructor
 @Slf4j
-@Profile("!test")
+@Profile("!it")
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final BookRepository bookRepository;

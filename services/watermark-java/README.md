@@ -38,9 +38,18 @@ a) Create an appropriate object-oriented model for the problem.<br />
 b) Implement the Watermark-Service, meeting the above conditions.<br />
 c) Provide Unit-Tests to ensure the functionality of the service.
 
+### Test coverage
+[JaCoCo plugin](https://docs.gradle.org/current/userguide/jacoco_plugin.html#sec:jacoco_report_configuration) is used 
+to verify minimum test coverage and see reports. Since we are using unit and integration test there are two independent
+coverage limits are used in *build.gradle* configuration.
+The production build uses following steps:
+`run unit tests`->`verify coverage limit`->`run it tests`->`verify coverage limit`
+Of course is possible to run unit tests only with coverage:
+`./gradlew clean test jacocoTestReport jacocoTestCoverageVerification`
+
 ### Run service:
 ```
-./gradlew clean build -i && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
+./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
 ```
 Some tests are a bit time consuming (total time ~ 1min), to speed up launch:
 ```

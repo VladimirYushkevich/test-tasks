@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public abstract class BaseCommand<R> extends HystrixObservableCommand<R> {
+abstract class BaseCommand<R> extends HystrixObservableCommand<R> {
 
     private final String debugMessage;
 
-    protected BaseCommand(String groupKey, int timeout, String debugMessage) {
+    BaseCommand(String groupKey, int timeout, String debugMessage) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupKey))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
                         .withExecutionTimeoutInMilliseconds(timeout))
@@ -24,7 +24,7 @@ public abstract class BaseCommand<R> extends HystrixObservableCommand<R> {
         this.debugMessage = debugMessage;
     }
 
-    protected void handleErrors() {
+    void handleErrors() {
         final String message;
         if (isFailedExecution()) {
             message = getMessagePrefix() + "FAILED: " + getFailedExecutionException().getMessage();

@@ -23,7 +23,7 @@ import static com.yushkevich.watermark.java.domain.Watermark.Status.NEW;
 @Component
 @AllArgsConstructor
 @Slf4j
-@Profile("test")
+@Profile("it")
 public class TestDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final BookRepository bookRepository;

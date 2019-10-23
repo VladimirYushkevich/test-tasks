@@ -8,13 +8,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WatermarkCommandTest {
@@ -26,15 +26,13 @@ public class WatermarkCommandTest {
 
     @Before
     public void setUp() {
-        watermarkCommand = new WatermarkCommand("Tests", 2000, "testWatermarkDocument",
+        watermarkCommand = new WatermarkCommand("WatermarkGroupTest", 1000, "testWatermarkDocument",
                 Arrays.asList("A", "B", "C"), watermarkClient);
     }
 
     @Test
     public void testWatermarkDocument_success() throws Exception {
-        when(watermarkClient.createWatermark(any())).thenReturn("watermark");
-
-        delayWatermarkClient(1000L);
+        delayWatermarkClient(500L, false);
 
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
@@ -44,19 +42,17 @@ public class WatermarkCommandTest {
 
     @Test
     public void testWatermarkDocument_clientTimeOut() throws Exception {
-        delayWatermarkClient(3000L);
+        delayWatermarkClient(1500L, false);
 
-        System.out.println("before delay: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
-        System.out.println("after delay: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SS").format(System.currentTimeMillis()));
 
         assertThat(watermarkProperty, is(""));
     }
 
     @Test
     public void testWatermarkDocument_clientException() throws Exception {
-        when(watermarkClient.createWatermark(any())).thenThrow(new RuntimeException("Watermark client failed"));
+        delayWatermarkClient(500L, true);
 
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
@@ -64,9 +60,12 @@ public class WatermarkCommandTest {
         assertThat(watermarkProperty, is(""));
     }
 
-    private void delayWatermarkClient(long timeout) {
+    private void delayWatermarkClient(long timeout, boolean isFailed) {
         doAnswer(invocation -> {
             Thread.sleep(timeout);
+            if (isFailed) {
+                throw new RuntimeException("Watermark client failed");
+            }
             return "watermarkTest";
         }).when(watermarkClient).createWatermark(any());
     }

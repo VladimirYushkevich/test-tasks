@@ -25,6 +25,7 @@ public class WatermarkClient {
         try {
             Thread.sleep(watermarkTimeOut);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
 

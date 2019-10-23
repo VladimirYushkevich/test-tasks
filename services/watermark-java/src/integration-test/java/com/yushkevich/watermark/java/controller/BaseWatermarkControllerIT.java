@@ -16,8 +16,8 @@ import java.util.UUID;
 
 import static com.jayway.restassured.http.ContentType.JSON;
 import static com.yushkevich.watermark.java.domain.Watermark.Status.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
