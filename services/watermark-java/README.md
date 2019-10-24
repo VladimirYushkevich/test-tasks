@@ -1,4 +1,4 @@
-Watermark [![Build Status](https://travis-ci.org/VladimirYushkevich/watermark-service.svg?branch=master)](https://travis-ci.org/VladimirYushkevich/watermark-service) [![codecov](https://codecov.io/gh/VladimirYushkevich/watermark-service/branch/master/graph/badge.svg)](https://codecov.io/gh/VladimirYushkevich/watermark-service)
+Watermark [![Build Status](https://github.com/VladimirYushkevich/test-tasks/workflows/watermark-java/badge.svg)](https://github.com/VladimirYushkevich/test-tasks/actions?workflow=watermark-java)
 =
 ### Description:
 
