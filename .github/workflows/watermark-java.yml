@@ -11,17 +11,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-#    - name: Git checkout
-#      uses: actions/checkout@v1
-#
-#    - name: Set up JDK 1.8
-#      uses: actions/setup-java@v1
-#      with:
-#        java-version: 1.8
-#
-#    - name: Build with Gradle
-#      working-directory: ./services/watermark-java
-#      run: ./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification
+    - name: Git checkout
+      uses: actions/checkout@v1
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Build with Gradle
+      working-directory: ./services/watermark-java
+      run: ./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification
 
     - name: Publish to Registry
-      run: echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin
+      run: docker image build -t watermark-java . \
+      echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin \
+      docker tag watermark-java yushkevich/test-tasks/services/watermark-java:latest \
+      docker push yushkevich/test-tasks/services/watermark-java:latest
