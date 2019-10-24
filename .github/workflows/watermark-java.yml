@@ -25,6 +25,7 @@ jobs:
       run: ./gradlew build -x test
 
     - name: Publish to Registry
+      working-directory: ./services/watermark-java
 #      uses: elgohr/Publish-Docker-Github-Action@master
 #      with:
 #        name: yushkevich/test-tasks
