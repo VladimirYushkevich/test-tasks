@@ -55,6 +55,11 @@ Some tests are a bit time consuming (total time ~ 1min), to speed up launch:
 ```
 ./gradlew clean build -x test && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
 ```
+You can also run it from docker image:
+```
+docker-compose up
+docker-compose down
+```
 
 ### Usage:
 
