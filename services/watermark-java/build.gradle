@@ -50,7 +50,7 @@ configurations {
 }
 
 springBoot {
-    mainClass = "com.yushkevich.watermark.java.Application"
+    mainClass = "com.yushkevich.watermark.Application"
 }
 
 dependencies {
@@ -93,7 +93,7 @@ task jacocoIntegrationTestCoverageVerification(type: JacocoCoverageVerification)
     violationRules {
         rule {
             limit {
-                minimum = 0.61
+                minimum = 0.57
             }
         }
     }
