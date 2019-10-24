@@ -2,14 +2,14 @@ name: watermark-java
 
 on:
   push:
+    branches:
+      - master
     paths:
       - 'services/watermark-java/**'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: Set up JDK 1.8
@@ -18,4 +18,11 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       working-directory: ./services/watermark-java
-      run: ./gradlew clean test -i
+      run: ./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: yushkevich/watermark-java
+        username: ${{ secrets.DOCKER_PRIVATE_USERNAME }}
+        password: ${{ secrets.DOCKER_PRIVATE_PASSWORD }}
