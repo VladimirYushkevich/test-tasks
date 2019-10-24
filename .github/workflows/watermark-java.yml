@@ -11,22 +11,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Git checkout
-      uses: actions/checkout@v1
-
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-
-    - name: Build with Gradle
-      working-directory: ./services/watermark-java
-      run: ./gradlew clean test -i
+#    - name: Git checkout
+#      uses: actions/checkout@v1
+#
+#    - name: Set up JDK 1.8
+#      uses: actions/setup-java@v1
+#      with:
+#        java-version: 1.8
+#
+#    - name: Build with Gradle
+#      working-directory: ./services/watermark-java
+#      run: ./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification
 
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: yushkevich/test-tasks/services/watermark-java
         username: ${{ secrets.DOCKER_PRIVATE_USERNAME }}
         password: ${{ secrets.DOCKER_PRIVATE_PASSWORD }}
         registry: cloud.docker.com
+        dockerfile: Dockerfile
