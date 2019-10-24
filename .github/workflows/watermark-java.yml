@@ -24,10 +24,4 @@ jobs:
 #      run: ./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification
 
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: yushkevich/test-tasks/services/watermark-java
-        username: ${{ secrets.DOCKER_PRIVATE_USERNAME }}
-        password: ${{ secrets.DOCKER_PRIVATE_PASSWORD }}
-        registry: cloud.docker.com
-        dockerfile: Dockerfile
+      run: echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin

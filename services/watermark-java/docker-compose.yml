@@ -5,4 +5,4 @@ services:
     image: yushkevich/test-tasks/services/watermark-java:latest
     container_name: watermark-java
     ports:
-      - 8080:8081
+      - 8080:8080
