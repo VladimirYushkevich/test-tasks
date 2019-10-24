@@ -25,15 +25,15 @@ jobs:
       run: ./gradlew build -x test
 
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: yushkevich/test-tasks
-        username: ${{ secrets.DOCKER_PRIVATE_USERNAME }}
-        password: ${{ secrets.DOCKER_PRIVATE_PASSWORD }}
-        registry: cloud.docker.com
-        dockerfile: Dockerfile
-#      run: |
-#        docker image build -t watermark-java .
-#        echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin \
-#        docker tag watermark-java yushkevich/test-tasks/services/watermark-java:latest \
-#        docker push yushkevich/test-tasks/services/watermark-java:latest
+#      uses: elgohr/Publish-Docker-Github-Action@master
+#      with:
+#        name: yushkevich/test-tasks
+#        username: ${{ secrets.DOCKER_PRIVATE_USERNAME }}
+#        password: ${{ secrets.DOCKER_PRIVATE_PASSWORD }}
+#        registry: cloud.docker.com
+#        dockerfile: Dockerfile
+      run: |
+        docker image build -t watermark-java .
+        echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin \
+        docker tag watermark-java yushkevich/test-tasks/services/watermark-java:latest \
+        docker push yushkevich/test-tasks/services/watermark-java:latest
