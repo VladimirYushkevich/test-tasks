@@ -37,7 +37,7 @@ public class WatermarkCommandTest {
         String watermarkProperty = watermarkCommand.observe()
                 .toBlocking().toFuture().get();
 
-        assertThat(watermarkProperty, is("watermarkTestFailed"));
+        assertThat(watermarkProperty, is("watermarkTest"));
     }
 
     @Test
