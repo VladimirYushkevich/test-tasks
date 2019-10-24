@@ -26,7 +26,7 @@ jobs:
     - name: Report coverage
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: bash <(curl -s https://codecov.io/bash)
+      run: bash <(curl -s https://codecov.io/bash)
 
     - name: Publish to Registry
       working-directory: ./services/watermark-java
