@@ -29,6 +29,7 @@ jobs:
       working-directory: ./services/watermark-java
       run: |
         pwd
+        ls -lt
         bash <(curl -s https://codecov.io/bash) -f ./build/reports/jacoco/test/jacocoTestReport.xml
 #      with:
 #        token: ${{secrets.CODECOV_TOKEN}}
