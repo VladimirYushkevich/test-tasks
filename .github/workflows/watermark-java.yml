@@ -28,6 +28,7 @@ jobs:
       run: |
         pwd
         ls -lt
+        export CODECOV_TOKEN=${{secrets.CODECOV_TOKEN}}
         bash <(curl -s https://codecov.io/bash) -f ./build/reports/jacoco/test/jacocoTestReport.xml
 
 #    - name: Report coverage (Integration Tests)
