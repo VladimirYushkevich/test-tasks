@@ -89,7 +89,7 @@ Java8
 Spring(Boot, Data)  
 h2database  
 Hystrix  
-swagger  
+Swagger  
 
 ### Environment
 
