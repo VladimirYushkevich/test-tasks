@@ -25,7 +25,6 @@ jobs:
 
     - name: Report coverage (Unit Tests)
       uses: codecov/codecov-action@v1.0.3
-      working-directory: ./services/watermark-java
       with:
         token: ${{secrets.CODECOV_TOKEN}}
         file: ./build/reports/jacoco/test/jacocoTestReport.xml
@@ -34,7 +33,6 @@ jobs:
 
     - name: Report coverage (Integration Tests)
       uses: codecov/codecov-action@v1.0.3
-      working-directory: ./services/watermark-java
       with:
         token: ${{secrets.CODECOV_TOKEN}}
         file: ./build/reports/jacoco/jacocoIntegrationTestReport/jacocoIntegrationTestReport.xml
