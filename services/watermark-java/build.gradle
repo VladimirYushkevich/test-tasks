@@ -82,9 +82,20 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
 task jacocoIntegrationTestReport(type: JacocoReport) {
     executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/integrationTest.exec")
     sourceSets sourceSets.main
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
 }
 
 task jacocoIntegrationTestCoverageVerification(type: JacocoCoverageVerification) {

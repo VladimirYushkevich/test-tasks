@@ -23,10 +23,23 @@ jobs:
       working-directory: ./services/watermark-java
       run: ./gradlew build integrationTest jacocoTestReport jacocoTestCoverageVerification
 
-    - name: Report coverage
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: bash <(curl -s https://codecov.io/bash)
+    - name: Report coverage (Unit Tests)
+    - uses: codecov/codecov-action@v1.0.3
+      working-directory: ./services/watermark-java
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./build/reports/jacoco/test/jacocoTestReport.xml
+        flags: unit-tests
+        name: codecov-ut
+
+    - name: Report coverage (Integration Tests)
+    - uses: codecov/codecov-action@v1.0.3
+      working-directory: ./services/watermark-java
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./build/reports/jacoco/jacocoIntegrationTestReport/jacocoIntegrationTestReport.xml
+        flags: integration-tests
+        name: codecov-ut
 
     - name: Publish to Registry
       working-directory: ./services/watermark-java

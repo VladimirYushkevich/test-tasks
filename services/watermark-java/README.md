@@ -83,6 +83,14 @@ curl localhost:8080/watermark/eb849f71-cadf-4084-b85d-a588a6143479 | jq
 curl -X GET --header 'Accept: application/json' 'http://localhost:8080/publication/list?content=BOOK&page=0&size=2&sort=author' | jq
 ```
 
+### Technologies
+
+Java8  
+Spring(Boot, Data)  
+h2database  
+Hystrix  
+swagger  
+
 ### Environment
 
 macOS Sierra (version 10.12.1)  
