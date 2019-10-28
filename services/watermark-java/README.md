@@ -57,6 +57,7 @@ Some tests are a bit time consuming (total time ~ 1min), to speed up launch:
 ```
 You can also run it from docker image (than port should be 8081 in examples):
 ```
+docker-compose rmi yushkevich/watermark-java
 docker-compose up
 docker-compose down
 ```
