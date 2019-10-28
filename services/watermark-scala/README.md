@@ -3,7 +3,7 @@ Watermark [![Build Status](https://github.com/VladimirYushkevich/test-tasks/work
 ### Description:
 
 This is a scala version of watermark application.
-
+Created by using scala template [akka/akka-http-quickstart-scala.g8](https://github.com/akka/akka-http-quickstart-scala.g8) (Akka HTTP Quickstart in Scala)
 
 #### Watermark-Test
 
