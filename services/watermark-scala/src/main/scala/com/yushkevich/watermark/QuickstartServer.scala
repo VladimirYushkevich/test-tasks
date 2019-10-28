@@ -12,7 +12,7 @@ import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.util.{ Failure, Success }
 
 //#main-class
-object QuickstartServer extends App with UserRoutes {
+object QuickstartServer extends App with WatermarkRoutes {
 
   // set up ActorSystem and other dependencies here
   //#main-class
@@ -22,11 +22,11 @@ object QuickstartServer extends App with UserRoutes {
   implicit val executionContext: ExecutionContext = system.dispatcher
   //#server-bootstrapping
 
-  val userRegistryActor: ActorRef = system.actorOf(UserRegistryActor.props, "userRegistryActor")
+  val watermarkActor: ActorRef = system.actorOf(WatermarkActor.props, "watermarkActor")
 
   //#main-class
   // from the UserRoutes trait
-  lazy val routes: Route = userRoutes
+  lazy val routes: Route = watermarkRoutes
   //#main-class
 
   //#http-server
