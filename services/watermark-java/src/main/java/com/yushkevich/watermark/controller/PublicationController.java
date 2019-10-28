@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import static com.yushkevich.watermark.utils.mapper.PublicationMapper.*;
 
 @RestController
-@RequestMapping("/publication")
+@RequestMapping("/api/v1/publication")
 @AllArgsConstructor
 @Slf4j
-@Api(description = "Sync CRUD operations for book and journals")
+@Api("Sync CRUD operations for book and journals")
 public class PublicationController {
 
     private final PublicationService publicationService;

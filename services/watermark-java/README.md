@@ -2,7 +2,7 @@ Watermark [![Build Status](https://github.com/VladimirYushkevich/test-tasks/work
 =
 ### Description:
 
-Watermark-service is a Spring boot application.
+This is a Spring boot application.
 It uses in memory h2database in the persistence layer with appropriate domain model. Database populated during start up via
 corresponding **DataLoader** (and **TestDataLoader** for test profile)
 All Watermark requests handled asynchronously by **WatermarkController** (Spring **DeferredResult** + rx **Observable**). 
@@ -68,19 +68,19 @@ docker-compose down
 
 Or if you prefer CLI:
 ```
-curl localhost:8080/publication/1?content=BOOK | jq
+curl localhost:8080/api/v1/publication/1?content=BOOK | jq
 ```
 ```
-curl POST localhost:8080/publication/create -d '{"content": "BOOK", "title": "bookTitle", "author": "bookAuthor", "topic": "BUSINESS"}' -H 'Content-Type: application/json' | jq
+curl POST localhost:8080/api/v1/publication/create -d '{"content": "BOOK", "title": "bookTitle", "author": "bookAuthor", "topic": "BUSINESS"}' -H 'Content-Type: application/json' | jq
 ```
 ```
-curl POST localhost:8080/watermark -d '{"publicationId": 5, "content": "BOOK"}' -H 'Content-Type: application/json' | jq
+curl POST localhost:8080/api/v1/watermark -d '{"publicationId": 5, "content": "BOOK"}' -H 'Content-Type: application/json' | jq
 ```
 ```
-curl localhost:8080/watermark/eb849f71-cadf-4084-b85d-a588a6143479 | jq
+curl localhost:8080/api/v1/watermark/eb849f71-cadf-4084-b85d-a588a6143479 | jq
 ```
 ```
-curl -X GET --header 'Accept: application/json' 'http://localhost:8080/publication/list?content=BOOK&page=0&size=2&sort=author' | jq
+curl -X GET --header 'Accept: application/json' 'http://localhost:8080/api/v1/publication/list?content=BOOK&page=0&size=2&sort=author' | jq
 ```
 
 ### Technologies
@@ -93,5 +93,5 @@ Swagger
 
 ### Environment
 
-macOS Sierra (version 10.12.1)  
+macOS Sierra (version 10.12.6)  
 Java(TM) SE Runtime Environment (build 1.8.0_172-b11)

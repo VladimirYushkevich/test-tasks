@@ -19,10 +19,10 @@ import java.util.UUID;
  */
 
 @RestController
-@RequestMapping("/watermark")
+@RequestMapping("/api/v1/watermark")
 @AllArgsConstructor
 @Slf4j
-@Api(description = "Async operations for watermarks")
+@Api("Async operations for watermarks")
 public class WatermarkController {
 
     private final WatermarkService watermarkService;

@@ -29,9 +29,9 @@ public abstract class BaseControllerIT {
 
     @Autowired
     protected ObjectMapper objectMapper;
-    @Value("http://localhost:${local.server.port}/publication")
+    @Value("http://localhost:${local.server.port}/api/v1/publication")
     protected String publicationBase;
-    @Value("http://localhost:${local.server.port}/watermark")
+    @Value("http://localhost:${local.server.port}/api/v1/watermark")
     protected String watermarkBase;
 
     protected PublicationDTO book;
