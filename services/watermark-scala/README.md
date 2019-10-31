@@ -30,6 +30,14 @@ a) Create an appropriate object-oriented model for the problem.<br />
 b) Implement the Watermark-Service, meeting the above conditions.<br />
 c) Provide Unit-Tests to ensure the functionality of the service.
 
+### Usage:
+```
+curl -d '{"content":"book", "title":"The Dark Code", "author":"Bruce Wayne"}' -H 'Content-Type:application/json' -X POST http://localhost:8080/api/v2/publications
+```
+```
+curl localhost:8080/api/v2/publications | jq
+```
+
 ### Environment
 
 macOS Sierra (version 10.12.6)  

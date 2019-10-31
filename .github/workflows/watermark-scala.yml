@@ -1,0 +1,15 @@
+name: watermark-scala
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'services/watermark-scala/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v1
