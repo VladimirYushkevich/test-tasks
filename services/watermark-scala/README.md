@@ -43,6 +43,6 @@ curl -X DELETE localhost:8080/api/v2/publications/ddc0f84d-a4df-4f75-b79e-ac322c
 
 ### Environment
 
-macOS Sierra (version 10.12.6)  
-Scala 2.12.2
-SBT 0.13.15
+macOS Sierra (version 10.15.1)  
+Scala 2.12.8
+SBT 1.3.4
