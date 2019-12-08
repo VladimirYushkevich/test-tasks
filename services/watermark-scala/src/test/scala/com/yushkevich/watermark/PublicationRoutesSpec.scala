@@ -5,7 +5,7 @@ import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import com.yushkevich.watermark.actors.{Publication, PublicationActor, WatermarkActor}
+import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
 import com.yushkevich.watermark.routes.PublicationRoutes
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{Matchers, WordSpec}

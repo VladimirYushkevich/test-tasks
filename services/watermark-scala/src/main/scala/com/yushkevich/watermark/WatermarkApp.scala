@@ -1,25 +1,27 @@
 package com.yushkevich.watermark
 
-import akka.actor.{ ActorRef, ActorSystem, Props }
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
-import com.yushkevich.watermark.actors.{ PublicationActor, WatermarkActor }
+import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
 import com.yushkevich.watermark.routes.PublicationRoutes
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ Await, ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-object WatermarkServer extends App with PublicationRoutes with LazyLogging {
+object WatermarkApp extends App with PublicationRoutes with LazyLogging {
 
   implicit val system: ActorSystem = ActorSystem("watermarkAkkaHttpServer")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContext = system.dispatcher
 
-  val watermarkActorRef: ActorRef = system.actorOf(Props[WatermarkActor], "watermarkActor")
-  val publicationActorRef: ActorRef = system.actorOf(Props(classOf[PublicationActor], watermarkActorRef), "publicationActor")
+  var publicationRepository = InMemoryPublicationRepository
+
+//  val watermarkActorRef: ActorRef = system.actorOf(Props[WatermarkActor], "watermarkActor")
+  val publicationActorRef: ActorRef = system.actorOf(PublicationActor.props(publicationRepository), "publicationActor")
 
   lazy val routes: Route = publicationRoutes
 

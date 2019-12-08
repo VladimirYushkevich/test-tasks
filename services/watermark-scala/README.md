@@ -32,10 +32,13 @@ c) Provide Unit-Tests to ensure the functionality of the service.
 
 ### Usage:
 ```
-curl -d '{"content":"book", "title":"The Dark Code", "author":"Bruce Wayne"}' -H 'Content-Type:application/json' -X POST http://localhost:8080/api/v2/publications
+curl -v -d '{"content":"book", "title":"The Dark Code", "author":"Bruce Wayne"}' -H 'Content-Type:application/json' -X POST http://localhost:8080/api/v2/publications
 ```
 ```
 curl localhost:8080/api/v2/publications | jq
+```
+```
+curl -X DELETE localhost:8080/api/v2/publications/ddc0f84d-a4df-4f75-b79e-ac322cc755b5
 ```
 
 ### Environment

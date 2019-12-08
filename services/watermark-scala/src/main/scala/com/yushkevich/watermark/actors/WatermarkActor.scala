@@ -3,11 +3,12 @@ package com.yushkevich.watermark.actors
 import java.math.BigInteger
 import java.security.MessageDigest
 
-import akka.actor.{ Actor, ActorLogging }
+import akka.actor.{Actor, ActorLogging}
+import com.yushkevich.watermark.Publication
 
 object WatermarkActor {
 
-  final case class Watermark(ticketId: String, publication: Publication)
+  case class Watermark(ticketId: String, publication: Publication)
 
 }
 
@@ -15,14 +16,11 @@ class WatermarkActor extends Actor with ActorLogging {
 
   import WatermarkActor._
 
-  var publications = Set.empty[Publication]
-  var ticketIdToPublication = Map.empty[String, Publication]
-
   def receive: Receive = {
     case Watermark(ticketId, publication) =>
       val watermark = md5HashString(publication.content, 1000)
       log.info(s"Created watermark=$watermark for ticketId=$ticketId")
-      sender() ! Watermark(ticketId, Publication.of(publication, watermark = Some(watermark), ticketId = Some(ticketId)))
+      sender() ! Watermark(ticketId, Publication(publication, watermark = Some(watermark), ticketId = Some(ticketId)))
   }
 
   private def md5HashString(input: String, timeout: Int): String = {
