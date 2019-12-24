@@ -8,7 +8,7 @@ import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-sealed trait PublicationRepository {
+trait PublicationRepository {
   def save(publication: Publication): Future[Option[String]]
 
   def get(): Future[Seq[Publication]]

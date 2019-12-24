@@ -1,18 +1,17 @@
 package com.yushkevich.watermark
 
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
-import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
-import com.yushkevich.watermark.routes.PublicationRoutes
+import com.yushkevich.watermark.actors.PublicationActor
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-object WatermarkApp extends App with PublicationRoutes with LazyLogging {
+object WatermarkApp extends App with LazyLogging {
 
   implicit val system: ActorSystem = ActorSystem("watermarkAkkaHttpServer")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
@@ -20,10 +19,10 @@ object WatermarkApp extends App with PublicationRoutes with LazyLogging {
 
   var publicationRepository = InMemoryPublicationRepository
 
-//  val watermarkActorRef: ActorRef = system.actorOf(Props[WatermarkActor], "watermarkActor")
-  val publicationActorRef: ActorRef = system.actorOf(PublicationActor.props(publicationRepository), "publicationActor")
+  //  val watermarkActorRef: ActorRef = system.actorOf(Props[WatermarkActor], "watermarkActor")
+  val publicationActor: ActorRef = system.actorOf(PublicationActor.props(publicationRepository), "publicationActor")
 
-  lazy val routes: Route = publicationRoutes
+  lazy val routes: Route = PublicationRoutes(publicationActor)
 
   val serverBinding: Future[Http.ServerBinding] = Http().bindAndHandle(routes, "localhost", 8080)
 

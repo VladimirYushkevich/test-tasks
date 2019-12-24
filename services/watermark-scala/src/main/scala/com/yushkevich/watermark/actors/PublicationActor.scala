@@ -32,7 +32,7 @@ object PublicationActor {
    * associated with using the Props.apply(...) method which takes a by-name argument, since within a companion object
    * the given code block will not retain a reference to its enclosing scope
    *
-   * @param publicationRepository
+   * @param publicationRepository Publication repository
    * @return
    */
   def props(publicationRepository: PublicationRepository): Props = Props(new PublicationActor(publicationRepository))
@@ -72,7 +72,7 @@ class PublicationActor(publicationRepository: PublicationRepository) extends Act
       val originalSender = sender
       publicationRepository.delete(ticketId).onComplete {
         case Success(ticketId) =>
-          originalSender ! s"Publication for ticketId=$ticketId deleted."
+          originalSender ! s"Publication for ticketId='$ticketId' deleted."
         case Failure(e) => Status.Failure(e)
       }
     case Watermark(ticketId, publication) =>
@@ -81,7 +81,7 @@ class PublicationActor(publicationRepository: PublicationRepository) extends Act
   }
 
   override val supervisorStrategy: OneForOneStrategy =
-    OneForOneStrategy(maxNrOfRetries = 3, withinTimeRange = 1 minute) {
+    OneForOneStrategy(maxNrOfRetries = 3, withinTimeRange = 1.minute) {
       case _: Exception => Escalate
     }
 }
