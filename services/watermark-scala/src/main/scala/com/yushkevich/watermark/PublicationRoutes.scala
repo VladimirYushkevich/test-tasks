@@ -1,6 +1,6 @@
 package com.yushkevich.watermark
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.ActorRef
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -10,10 +10,9 @@ import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.LazyLogging
-import com.yushkevich.watermark._
 import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublication, GetPublications}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
@@ -48,12 +47,7 @@ object PublicationRoutes extends JsonSupport with LazyLogging {
                 complete((publicationActor ? GetPublication(ticketId)).mapTo[Option[Publication]])
               },
               delete {
-                val ticketIdDeleted: Future[String] =
-                  (publicationActor ? DeletePublication(ticketId)).mapTo[String]
-                onSuccess(ticketIdDeleted) { message =>
-                  logger.info(message)
-                  complete((StatusCodes.OK, message))
-                }
+                complete((publicationActor ? DeletePublication(ticketId)).mapTo[String])
               })
           }
         })

@@ -1,11 +1,11 @@
 package com.yushkevich.watermark
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ActorRef, ActorRefFactory, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
-import com.yushkevich.watermark.actors.PublicationActor
+import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -18,9 +18,11 @@ object WatermarkApp extends App with LazyLogging {
   implicit val executionContext: ExecutionContext = system.dispatcher
 
   var publicationRepository = InMemoryPublicationRepository
+  var watermarkGenerator = Md5WatermarkGenerator
 
   //  val watermarkActorRef: ActorRef = system.actorOf(Props[WatermarkActor], "watermarkActor")
-  val publicationActor: ActorRef = system.actorOf(PublicationActor.props(publicationRepository), "publicationActor")
+  val maker = (f: ActorRefFactory) => f.actorOf(WatermarkActor.props(watermarkGenerator), "watermarkActor")
+  val publicationActor: ActorRef = system.actorOf(PublicationActor.props(publicationRepository, maker), "publicationActor")
 
   lazy val routes: Route = PublicationRoutes(publicationActor)
 
