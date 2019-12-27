@@ -1,21 +1,19 @@
 package com.yushkevich.watermark.actors
 
-import akka.actor.{ ActorSystem, Status }
-import akka.stream.testkit.GraphStageMessages.Failure
-import akka.testkit.{ ImplicitSender, TestActorRef, TestKit, TestProbe }
-import akka.util.Timeout
+import akka.actor.{ActorSystem, Status}
+import akka.testkit.{ImplicitSender, TestActorRef, TestKit, TestProbe}
 import com.yushkevich.watermark.Commons._
 import com.yushkevich.watermark.WatermarkGenerator
 import com.yushkevich.watermark.actors.PublicationActor.IndexPublication
-import com.yushkevich.watermark.actors.WatermarkActor.{ CreateWatermark, CreationError }
+import com.yushkevich.watermark.actors.WatermarkActor.CreateWatermark
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class WatermarkActorSpec
-  extends TestKit(ActorSystem("WatermarkActorSpec"))
+  extends TestKit(ActorSystem("test-actor-system"))
   with WordSpecLike
   with ImplicitSender
   with MockFactory

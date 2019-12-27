@@ -38,7 +38,7 @@ object InMemoryPublicationRepository extends PublicationRepository with LazyLogg
   }
 
   override def get(): Future[Seq[Publication]] = Future {
-    publications.toSeq
+    watermarkedPublications.values.toSeq
   }
 
   override def index(ticketId: String, publication: Publication): Unit = {

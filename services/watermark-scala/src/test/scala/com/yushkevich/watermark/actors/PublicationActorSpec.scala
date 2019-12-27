@@ -1,18 +1,18 @@
 package com.yushkevich.watermark.actors
 
-import akka.actor.{ ActorRef, ActorRefFactory, ActorSystem, Status }
-import akka.testkit.{ ImplicitSender, TestActorRef, TestKit, TestProbe }
+import akka.actor.{ActorRef, ActorRefFactory, ActorSystem, Status}
+import akka.testkit.{ImplicitSender, TestActorRef, TestKit, TestProbe}
 import com.yushkevich.watermark.Commons._
-import com.yushkevich.watermark.actors.PublicationActor.{ CreatePublication, DeletePublication, GetPublications }
-import com.yushkevich.watermark.{ Publication, PublicationRepository, WatermarkGenerator }
+import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublications}
+import com.yushkevich.watermark.{PublicationRepository, WatermarkGenerator}
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class PublicationActorSpec
-  extends TestKit(ActorSystem("PublicationActorSpec"))
+  extends TestKit(ActorSystem("test-actor-system"))
   with WordSpecLike
   with ImplicitSender
   with MockFactory

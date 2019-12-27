@@ -1,14 +1,14 @@
 package com.yushkevich.watermark.actors
 
 import akka.actor.SupervisorStrategy._
-import akka.actor.{ Actor, ActorLogging, ActorRef, ActorRefFactory, OneForOneStrategy, Props, Status }
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorRefFactory, OneForOneStrategy, Props, Status}
 import com.yushkevich.watermark._
-import com.yushkevich.watermark.actors.PublicationActor.{ CreatePublication, DeletePublication, GetPublication, GetPublications, IndexPublication }
+import com.yushkevich.watermark.actors.PublicationActor._
 import com.yushkevich.watermark.actors.WatermarkActor.CreateWatermark
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 /**
  * Supervisor

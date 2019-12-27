@@ -1,16 +1,16 @@
 package com.yushkevich.watermark
 
-import akka.actor.{ ActorRefFactory, ActorSystem, Status }
+import akka.actor.{ActorRefFactory, ActorSystem, Status}
 import akka.http.scaladsl.marshalling.Marshal
-import akka.http.scaladsl.model.{ StatusCodes, _ }
+import akka.http.scaladsl.model.{StatusCodes, _}
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.testkit.{ RouteTestTimeout, ScalatestRouteTest }
+import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.testkit.TestActorRef
 import com.yushkevich.watermark.Commons._
-import com.yushkevich.watermark.actors.PublicationActor.{ CreatePublication, DeletePublication, GetPublication, GetPublications }
-import com.yushkevich.watermark.actors.{ PublicationActor, WatermarkActor }
+import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublication, GetPublications}
+import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -26,10 +26,10 @@ class PublicationRoutesSpec
 
   private def routes(testActorRef: TestActorRef[PublicationActor]): Route = PublicationRoutes(testActorRef)
 
-  private val base: String = "/api/v2"
+  private val base: String = "/api/v2/publications"
   private val makerMock = (f: ActorRefFactory) => f.actorOf(WatermarkActor.props(null))
 
-  s"GET $base/publications" should {
+  s"GET $base" should {
     "return publications if present" in {
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
         override def receive: Receive = {
@@ -42,7 +42,7 @@ class PublicationRoutesSpec
             }
         }
       })
-      val request = HttpRequest(uri = "/api/v2/publications")
+      val request = HttpRequest(uri = s"$base")
 
       request ~> routes(testActorRef) ~> check {
         status shouldBe StatusCodes.OK
@@ -64,7 +64,7 @@ class PublicationRoutesSpec
             }
         }
       })
-      val request = HttpRequest(uri = "/api/v2/publications")
+      val request = HttpRequest(uri = s"$base")
 
       request ~> routes(testActorRef) ~> check {
         status shouldBe StatusCodes.OK
@@ -74,8 +74,8 @@ class PublicationRoutesSpec
     }
   }
 
-  s"GET $base/publications/[:ticketID]" should {
-    val request = HttpRequest(uri = "/api/v2/publications/ticketId")
+  s"GET $base/:ticketID" should {
+    val request = HttpRequest(uri = s"$base/ticketId")
     "be able to retrieve journal by ticket id" in {
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
         override def receive: Receive = {
@@ -135,8 +135,8 @@ class PublicationRoutesSpec
     }
   }
 
-  s"DELETE $base/publications/[:ticketID]" should {
-    val request = Delete(uri = "/api/v2/publications/ticketId")
+  s"DELETE $base/:ticketID" should {
+    val request = Delete(uri = s"$base/ticketId")
     "be able to remove publications by ticket id" in {
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
         override def receive: Receive = {
@@ -166,8 +166,8 @@ class PublicationRoutesSpec
     }
   }
 
-  s"POST $base/publications" should {
-    val journalRequest = Post("/api/v2/publications").withEntity(Marshal(testNewJournal).to[MessageEntity].futureValue)
+  s"POST $base" should {
+    val journalRequest = Post(s"$base").withEntity(Marshal(testNewJournal).to[MessageEntity].futureValue)
     "be able to add journal" in {
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
         override def receive: Receive = {
@@ -184,7 +184,7 @@ class PublicationRoutesSpec
     }
 
     "be able to add book" in {
-      val bookRequest = Post("/api/v2/publications").withEntity(Marshal(testNewBook).to[MessageEntity].futureValue)
+      val bookRequest = Post(s"$base").withEntity(Marshal(testNewBook).to[MessageEntity].futureValue)
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
         override def receive: Receive = {
           case CreatePublication(_) =>

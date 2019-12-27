@@ -1,12 +1,12 @@
 package com.yushkevich.watermark.actors
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, Props, Status }
+import akka.actor.{Actor, ActorLogging, ActorRef, Props, Status}
 import com.yushkevich.watermark.actors.PublicationActor.IndexPublication
-import com.yushkevich.watermark.actors.WatermarkActor.{ CreateWatermark, CreationError }
-import com.yushkevich.watermark.{ Publication, WatermarkGenerator }
+import com.yushkevich.watermark.actors.WatermarkActor.{CreateWatermark, CreationError}
+import com.yushkevich.watermark.{Publication, WatermarkGenerator}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object WatermarkActor {
 

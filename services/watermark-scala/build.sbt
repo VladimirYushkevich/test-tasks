@@ -1,8 +1,13 @@
+
 lazy val akkaHttpVersion = "10.1.10"
 lazy val akkaVersion = "2.5.26"
 
-lazy val root = (project in file(".")).
-  settings(
+lazy val IntegrationTest = config("it") extend Test
+
+lazy val root = (project in file("."))
+  .configs(IntegrationTest)
+  .settings(
+    Defaults.itSettings,
     inThisBuild(List(
       organization := "com.yushkevich",
       scalaVersion := "2.12.8"
@@ -14,16 +19,18 @@ lazy val root = (project in file(".")).
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "ch.qos.logback" % "logback-classic" % "1.2.3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
-
-      "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
-      "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
-      "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
-      "org.scalatest" %% "scalatest" % "3.0.5" % Test,
-      "org.scalamock" %% "scalamock" % "4.4.0" % Test
-    )
+    ) ++ testDependencies
   )
+
+lazy val testDependencies = Seq(
+  "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
+  "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion,
+  "org.scalatest" %% "scalatest" % "3.0.5",
+  "org.scalamock" %% "scalamock" % "4.4.0"
+).map(_ % "it,test")
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
-coverageMinimum := 65
+coverageMinimum := 78
 coverageFailOnMinimum := true
