@@ -22,3 +22,8 @@ lazy val root = (project in file(".")).
       "org.scalamock" %% "scalamock" % "4.4.0" % Test
     )
   )
+
+scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
+
+coverageMinimum := 65
+coverageFailOnMinimum := true

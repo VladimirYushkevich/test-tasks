@@ -63,7 +63,7 @@ class PublicationActor(publicationRepository: PublicationRepository, watermarkAc
         case Success(None) =>
           originalSender ! Status.Failure(new IllegalStateException("Publication already exits"))
         case Failure(e) =>
-          originalSender ! Status.Failure(new RuntimeException("Creation failed, reason: ", e))
+          originalSender ! Status.Failure(e)
       }
     case GetPublication(ticketId) =>
       val originalSender = sender()
@@ -78,7 +78,8 @@ class PublicationActor(publicationRepository: PublicationRepository, watermarkAc
         case Success(ticketId) =>
           originalSender ! s"Publication for ticketId='$ticketId' deleted."
         case Failure(e) =>
-          originalSender ! Status.Failure(throw new RuntimeException("Deletion failed, reason: ", e))
+          originalSender ! Status.Failure(e)
+          throw new RuntimeException("Deletion failed, reason: ", e)
       }
     case IndexPublication(ticketId, watermark, publication) =>
       log.info(s"Watermark '$watermark' of publication=$publication is available for search")

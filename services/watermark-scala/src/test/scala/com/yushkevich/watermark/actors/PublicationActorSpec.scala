@@ -1,23 +1,23 @@
 package com.yushkevich.watermark.actors
 
-import akka.actor.{ActorRef, ActorRefFactory, ActorSystem}
-import akka.testkit.{ImplicitSender, TestActorRef, TestKit, TestProbe}
+import akka.actor.{ ActorRef, ActorRefFactory, ActorSystem, Status }
+import akka.testkit.{ ImplicitSender, TestActorRef, TestKit, TestProbe }
 import com.yushkevich.watermark.Commons._
-import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublications}
-import com.yushkevich.watermark.{Publication, PublicationRepository, WatermarkGenerator}
+import com.yushkevich.watermark.actors.PublicationActor.{ CreatePublication, DeletePublication, GetPublications }
+import com.yushkevich.watermark.{ Publication, PublicationRepository, WatermarkGenerator }
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class PublicationActorSpec
   extends TestKit(ActorSystem("PublicationActorSpec"))
-    with WordSpecLike
-    with ImplicitSender
-    with MockFactory
-    with Matchers
-    with BeforeAndAfterAll {
+  with WordSpecLike
+  with ImplicitSender
+  with MockFactory
+  with Matchers
+  with BeforeAndAfterAll {
 
   override def afterAll: Unit = {
     TestKit.shutdownActorSystem(system)
@@ -26,15 +26,15 @@ class PublicationActorSpec
   /* ScalaMock supports two different styles—expectation-first and record-then-verify (Mockito-style).
   For expectation-first, use mock to create the fake object and expects to set expectations.
   For record-then-verify, use stub to create the fake object, when to setup return values and verify to verify calls.*/
-  var publicationRepositoryMock: PublicationRepository = stub[PublicationRepository]
-  var watermarkGeneratorMock: WatermarkGenerator = mock[WatermarkGenerator]
+  private val publicationRepositoryMock: PublicationRepository = stub[PublicationRepository]
+  private val watermarkGeneratorMock: WatermarkGenerator = mock[WatermarkGenerator]
 
   "GetPublications" should {
     val makerMock = (f: ActorRefFactory) => f.actorOf(WatermarkActor.props(watermarkGeneratorMock))
     val publicationActor = TestActorRef(PublicationActor.props(publicationRepositoryMock, makerMock))
 
     "return list of publication" in {
-      (publicationRepositoryMock.get: () => Future[Seq[Publication]]).when().returns(Future.successful(Seq(testWatermarkedJournal, testWatermarkedBook)))
+      (() => publicationRepositoryMock.get()).when().returns(Future.successful(Seq(testWatermarkedJournal, testWatermarkedBook)))
 
       publicationActor ! GetPublications
 
@@ -42,7 +42,7 @@ class PublicationActorSpec
     }
 
     "return empty list of publication" in {
-      (publicationRepositoryMock.get: () => Future[Seq[Publication]]).when().returns(Future.successful(Seq.empty))
+      (() => publicationRepositoryMock.get()).when().returns(Future.successful(Seq.empty))
 
       publicationActor ! GetPublications
 
@@ -79,7 +79,19 @@ class PublicationActorSpec
       (publicationRepositoryMock.index _).verify("bookTicketId", testWatermarkedBook).once()
     }
 
-    "create publication and failed to watermark before future, watermark actor resumed and available to consume next message" in {
+    "failed to save it" in {
+      val makerMock = (f: ActorRefFactory) => f.actorOf(WatermarkActor.props(watermarkGeneratorMock))
+      val publicationActor = TestActorRef(PublicationActor.props(publicationRepositoryMock, makerMock))
+      val exception = new RuntimeException("Failed to save")
+
+      (publicationRepositoryMock.save _).when(testNewJournal).returns(Future.failed(exception))
+
+      publicationActor ! CreatePublication(testNewJournal)
+
+      expectMsg(Status.Failure(exception))
+    }
+
+    "create publication and failed to generate watermark before future, watermark actor resumed and available to consume next message" in {
       val testProbe = TestProbe()
       var watermarkActor: ActorRef = null
 
@@ -131,7 +143,7 @@ class PublicationActorSpec
       assert(oldWatermarkActor == watermarkActor)
     }
 
-    "create publication and failed to watermark it, watermark actor terminated next message will be not consumed" in {
+    "create publication and failed to generate watermark, watermark actor terminated next message will be not consumed" in {
       val testProbe = TestProbe()
       var watermarkActor: ActorRef = null
 
@@ -158,7 +170,7 @@ class PublicationActorSpec
       assert(oldWatermarkActor == watermarkActor)
     }
 
-    "create publication and failed to watermark it, watermark actor recreated" in {
+    "create publication and failed to generate watermark, watermark actor recreated" in {
       val testProbe = TestProbe()
       var watermarkActor: ActorRef = null
 
@@ -183,7 +195,7 @@ class PublicationActorSpec
       assert(oldWatermarkActor != watermarkActor)
     }
 
-    "create publication and failed in future to watermark it, watermark actor recreated" in {
+    "create publication and failed in future to generate watermark, watermark actor recreated" in {
       val testProbe = TestProbe()
       var watermarkActor: ActorRef = null
 
@@ -223,11 +235,12 @@ class PublicationActorSpec
     }
 
     "delete publication failed" in {
-      (publicationRepositoryMock.delete _).when(*).returning(Future.failed(new IllegalCallerException("Something failed")))
+      val exception = new RuntimeException("Something failed")
+      (publicationRepositoryMock.delete _).when(*).returning(Future.failed(exception))
 
       publicationActor ! DeletePublication("ticketId")
 
-      expectNoMessage(2.seconds)
+      expectMsg(Status.Failure(exception))
     }
   }
 }
