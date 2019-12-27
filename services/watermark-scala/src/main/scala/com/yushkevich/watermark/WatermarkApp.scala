@@ -1,15 +1,15 @@
 package com.yushkevich.watermark
 
-import akka.actor.{ActorRef, ActorRefFactory, ActorSystem}
+import akka.actor.{ ActorRef, ActorRefFactory, ActorSystem }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
-import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
+import com.yushkevich.watermark.actors.{ PublicationActor, WatermarkActor }
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ Await, ExecutionContext, Future }
+import scala.util.{ Failure, Success }
 
 object WatermarkApp extends App with LazyLogging {
 

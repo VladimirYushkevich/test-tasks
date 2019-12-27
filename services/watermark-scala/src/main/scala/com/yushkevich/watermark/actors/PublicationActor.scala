@@ -1,14 +1,14 @@
 package com.yushkevich.watermark.actors
 
 import akka.actor.SupervisorStrategy._
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorRefFactory, OneForOneStrategy, Props, Status}
+import akka.actor.{ Actor, ActorLogging, ActorRef, ActorRefFactory, OneForOneStrategy, Props, Status }
 import com.yushkevich.watermark._
-import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublication, GetPublications}
-import com.yushkevich.watermark.actors.WatermarkActor.Watermark
+import com.yushkevich.watermark.actors.PublicationActor.{ CreatePublication, DeletePublication, GetPublication, GetPublications, IndexPublication }
+import com.yushkevich.watermark.actors.WatermarkActor.CreateWatermark
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 /**
  * Supervisor
@@ -23,6 +23,8 @@ object PublicationActor {
   case class GetPublication(ticketId: String)
 
   case class DeletePublication(name: String)
+
+  case class IndexPublication(ticketId: String, watermark: String, publication: Publication)
 
   /**
    * It is a good idea to provide factory methods on the companion object of each Actor which help keeping
@@ -50,13 +52,13 @@ class PublicationActor(publicationRepository: PublicationRepository, watermarkAc
       for {
         publications <- publicationRepository.get()
       } yield {
-        originalSender ! Publications(publications)
+        originalSender ! publications
       }
     case CreatePublication(publication) =>
       val originalSender = sender()
       publicationRepository.save(publication).onComplete {
         case Success(Some(ticketId)) =>
-          watermarkActor ! Watermark(ticketId, publication)
+          watermarkActor ! CreateWatermark(ticketId, publication)
           originalSender ! ticketId
         case Success(None) =>
           originalSender ! Status.Failure(new IllegalStateException("Publication already exits"))
@@ -78,9 +80,13 @@ class PublicationActor(publicationRepository: PublicationRepository, watermarkAc
         case Failure(e) =>
           originalSender ! Status.Failure(throw new RuntimeException("Deletion failed, reason: ", e))
       }
-    case Watermark(ticketId, publication) =>
-      log.info(s"Watermark ${publication.watermark} is available for search")
-      publicationRepository.index(ticketId, publication)
+    case IndexPublication(ticketId, watermark, publication) =>
+      log.info(s"Watermark '$watermark' of publication=$publication is available for search")
+      val watermarkedPublication: Publication = publication match {
+        case Book(content, author, title, _, _, topic) => Book(content, author, title, Some(watermark), Some(ticketId), topic)
+        case Journal(content, author, title, _, _) => Journal(content, author, title, Some(watermark), Some(ticketId))
+      }
+      publicationRepository.index(ticketId, watermarkedPublication)
   }
 
   // Works only when child (WatermarkActor) created by PublicationActor
