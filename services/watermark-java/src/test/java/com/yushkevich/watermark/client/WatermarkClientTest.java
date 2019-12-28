@@ -14,7 +14,7 @@ public class WatermarkClientTest {
 
     private WatermarkClient watermarkClient = new WatermarkClient();
 
-    private static final int WATERMARK_TIMEOUT = 1000;
+    private static final int WATERMARK_TIMEOUT = 100;
 
     @Before
     public void setUp() {
