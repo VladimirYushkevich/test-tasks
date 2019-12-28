@@ -47,6 +47,55 @@ class PublicationRoutesIntegrationTest
           Journal(testNewJournal.content, testNewJournal.author, testNewJournal.title, Some("272dfc41733c2efec33863c8b0c87982"), Some(journalTicketId))
         ))
       }
+
+      deletePublication(bookTicketId)
+      deletePublication(journalTicketId)
+    }
+  }
+
+  s"GET $base/:ticketId" should {
+    "return NOT FOUND" in {
+      val request = HttpRequest(uri = s"$base/ticketId")
+
+      request ~> routes ~> check {
+        status shouldBe StatusCodes.NotFound
+      }
+    }
+
+    "return some publication" in {
+      val bookTicketId: String = createAndValidatePublication(testNewBook)
+      val request = HttpRequest(uri = s"$base/$bookTicketId")
+
+      request ~> routes ~> check {
+        status shouldBe StatusCodes.OK
+        contentType shouldBe ContentTypes.`application/json`
+        responseAs[Publication] shouldBe Book(testNewBook.content, testNewBook.author, testNewBook.title, Some("d263f6e586e70eafc8c7424d6440d1b6"), Some(bookTicketId), Topic.SCIENCE)
+      }
+
+      deletePublication(bookTicketId)
+    }
+  }
+
+  s"POST $base" should {
+    "return CONFLICT when publication already exist" in {
+      val bookTicketId: String = createAndValidatePublication(testNewBook)
+      val sameBookRequest = Post(s"$base").withEntity(Marshal(testNewBook).to[MessageEntity].futureValue)
+
+      sameBookRequest ~> routes ~> check {
+        status shouldBe StatusCodes.Conflict
+      }
+
+      deletePublication(bookTicketId)
+    }
+  }
+
+  s"DELETE $base" should {
+    "return NOT FOUND for not existing publication" in {
+      val notExistingPublicationRequest = Delete(uri = s"$base/ticketId")
+
+      notExistingPublicationRequest ~> routes ~> check {
+        status shouldBe StatusCodes.NotFound
+      }
     }
   }
 
@@ -62,5 +111,15 @@ class PublicationRoutesIntegrationTest
     }
 
     ticketId
+  }
+
+  private def deletePublication(ticketId: String) = {
+    val request = Delete(uri = s"$base/$ticketId")
+
+    request ~> routes ~> check {
+      status shouldBe StatusCodes.OK
+      contentType shouldBe ContentTypes.`text/plain(UTF-8)`
+      entityAs[String] shouldBe s"Publication for ticketId='$ticketId' deleted."
+    }
   }
 }

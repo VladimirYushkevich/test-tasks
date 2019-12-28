@@ -40,16 +40,27 @@ object PublicationRoutes extends PublicationProtocol with LazyLogging {
               }
             })
         },
-        rejectEmptyResponse {
-          path(Segment) { ticketId =>
-            concat(
-              get {
-                complete((publicationActor ? GetPublication(ticketId)).mapTo[Option[Publication]])
-              },
-              delete {
-                complete((publicationActor ? DeletePublication(ticketId)).mapTo[String])
-              })
-          }
-        })
+        path(Segment) { ticketId =>
+          concat(
+            get {
+              onComplete((publicationActor ? GetPublication(ticketId)).mapTo[Option[Publication]]) {
+                case Success(value) => value match {
+                  case Some(publication) => complete(StatusCodes.OK, publication)
+                  case None => complete(StatusCodes.NotFound)
+                }
+                case Failure(_) => complete(StatusCodes.InternalServerError)
+              }
+            },
+            delete {
+              onComplete((publicationActor ? DeletePublication(ticketId)).mapTo[String]) {
+                case Failure(e) => e match {
+                  case _: RuntimeException => complete(StatusCodes.NotFound)
+                  case _: Exception => complete(StatusCodes.InternalServerError)
+                }
+                case Success(resultMsg) => complete(StatusCodes.OK, resultMsg)
+              }
+            })
+        }
+      )
     }
 }

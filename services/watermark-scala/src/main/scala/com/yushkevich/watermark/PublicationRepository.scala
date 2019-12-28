@@ -50,7 +50,17 @@ object InMemoryPublicationRepository extends PublicationRepository with LazyLogg
   }
 
   override def delete(ticketId: String): Future[String] = Future {
+    val watermarkedPublication = watermarkedPublications(ticketId)
+    val publication = watermarkedPublication match {
+      case Book(content, author, title, _, _, topic) =>
+        Book(content, author, title, None, None, topic)
+      case Journal(content, author, title, _, _) =>
+        Journal(content, author, title, None, None)
+    }
+    publications.remove(publication)
+    logger.info(s"Deleted from publications: $publication")
     watermarkedPublications -= ticketId
+    logger.info(s"Deleted from watermarked publications: $watermarkedPublication")
     ticketId
   }
 }

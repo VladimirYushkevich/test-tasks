@@ -61,7 +61,7 @@ class PublicationActor(publicationRepository: PublicationRepository, watermarkAc
           watermarkActor ! CreateWatermark(ticketId, publication)
           originalSender ! ticketId
         case Success(None) =>
-          originalSender ! Status.Failure(new IllegalStateException("Publication already exits"))
+          originalSender ! Status.Failure(new IllegalStateException("Publication already exists"))
         case Failure(e) =>
           originalSender ! Status.Failure(e)
       }
@@ -79,7 +79,7 @@ class PublicationActor(publicationRepository: PublicationRepository, watermarkAc
           originalSender ! s"Publication for ticketId='$ticketId' deleted."
         case Failure(e) =>
           originalSender ! Status.Failure(e)
-          throw new RuntimeException("Deletion failed, reason: ", e)
+//          throw new RuntimeException("Deletion failed, reason: ", e)
       }
     case IndexPublication(ticketId, watermark, publication) =>
       log.info(s"Watermark '$watermark' of publication=$publication is available for search")

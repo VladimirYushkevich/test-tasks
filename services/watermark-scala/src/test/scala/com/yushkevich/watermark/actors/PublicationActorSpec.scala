@@ -1,9 +1,10 @@
 package com.yushkevich.watermark.actors
 
+import akka.actor.Status.Failure
 import akka.actor.{ActorRef, ActorRefFactory, ActorSystem, Status}
 import akka.testkit.{ImplicitSender, TestActorRef, TestKit, TestProbe}
 import com.yushkevich.watermark.Commons._
-import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublications}
+import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublication, GetPublications}
 import com.yushkevich.watermark.{PublicationRepository, WatermarkGenerator}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
@@ -13,11 +14,11 @@ import scala.concurrent.duration._
 
 class PublicationActorSpec
   extends TestKit(ActorSystem("test-actor-system"))
-  with WordSpecLike
-  with ImplicitSender
-  with MockFactory
-  with Matchers
-  with BeforeAndAfterAll {
+    with WordSpecLike
+    with ImplicitSender
+    with MockFactory
+    with Matchers
+    with BeforeAndAfterAll {
 
   override def afterAll: Unit = {
     TestKit.shutdownActorSystem(system)
@@ -47,6 +48,19 @@ class PublicationActorSpec
       publicationActor ! GetPublications
 
       expectMsg(Seq.empty)
+    }
+  }
+
+  "GetPublication" should {
+    val makerMock = (f: ActorRefFactory) => f.actorOf(WatermarkActor.props(watermarkGeneratorMock))
+    val publicationActor = TestActorRef(PublicationActor.props(publicationRepositoryMock, makerMock))
+
+    "return publication" in {
+      (publicationRepositoryMock.get(_: String)).when("journalTicketId").returns(Future.successful(Some(testWatermarkedJournal)))
+
+      publicationActor ! GetPublication("journalTicketId")
+
+      expectMsg(Some(testWatermarkedJournal))
     }
   }
 
@@ -218,6 +232,17 @@ class PublicationActorSpec
       (publicationRepositoryMock.index _).verify("ticketId", testWatermarkedJournal).never()
       testProbe.expectTerminated(oldWatermarkActor)
       assert(oldWatermarkActor != watermarkActor)
+    }
+
+    "not create publication when already exists" in {
+      val makerMock = (f: ActorRefFactory) => f.actorOf(TestActorRef(WatermarkActor.props(watermarkGeneratorMock)).props)
+      val publicationActor = TestActorRef(PublicationActor.props(publicationRepositoryMock, makerMock))
+
+      (publicationRepositoryMock.save _).when(testNewJournal).returns(Future.successful(None))
+
+      publicationActor ! CreatePublication(testNewJournal)
+
+      expectMsgType[Status.Failure]
     }
   }
 

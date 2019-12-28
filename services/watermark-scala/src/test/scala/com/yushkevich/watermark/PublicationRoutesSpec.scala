@@ -77,7 +77,7 @@ class PublicationRoutesSpec
     }
   }
 
-  s"GET $base/:ticketID" should {
+  s"GET $base/:ticketId" should {
     val request = HttpRequest(uri = s"$base/ticketId")
     "be able to retrieve journal by ticket id" in {
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
@@ -136,9 +136,27 @@ class PublicationRoutesSpec
         status shouldBe StatusCodes.NotFound
       }
     }
+
+    "return INTERNAL ERROR when exception raised during found by ticket id" in {
+      val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
+        override def receive: Receive = {
+          case GetPublication(_) =>
+            val originalSender = sender()
+            for {
+              publication <- Future.failed(new RuntimeException("No publication found"))
+            } yield {
+              originalSender ! publication
+            }
+        }
+      })
+
+      request ~> Route.seal(routes(testActorRef)) ~> check {
+        status shouldBe StatusCodes.InternalServerError
+      }
+    }
   }
 
-  s"DELETE $base/:ticketID" should {
+  s"DELETE $base/:ticketId" should {
     val request = Delete(uri = s"$base/ticketId")
     "be able to remove publications by ticket id" in {
       val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
@@ -152,6 +170,19 @@ class PublicationRoutesSpec
         status shouldBe StatusCodes.OK
         contentType shouldBe ContentTypes.`text/plain(UTF-8)`
         entityAs[String] shouldBe "Publication for ticketId='ticketId' deleted."
+      }
+    }
+
+    "return CONFLICT when publication is not exist" in {
+      val testActorRef: TestActorRef[PublicationActor] = TestActorRef(new PublicationActor(null, makerMock) {
+        override def receive: Receive = {
+          case DeletePublication(_) =>
+            throw new RuntimeException("Publication not found")
+        }
+      })
+
+      request ~> routes(testActorRef) ~> check {
+        status shouldBe StatusCodes.InternalServerError
       }
     }
 
@@ -205,14 +236,6 @@ class PublicationRoutesSpec
     "fail when request entity is not valid (topic is not correct)" in {
       val notValidBookRequest = Post(s"$base", HttpEntity(`application/json`, """{"content":"a","title":"b","author":"c","{topic}":"MEDIA"}"""))
       notValidBookRequest ~> routes(null) ~> check {
-        inside(rejection) {
-          case MalformedRequestContentRejection("Publication expected", _: DeserializationException) =>
-        }
-      }
-    }
-
-    "fail when request entity is not valid (fields are not correct)" in {
-      Post(s"$base", HttpEntity(`application/json`, """{"content":"a","title":"b","author":"c","notValid":"d","topic":"SCIENCE"}""")) ~> routes(null) ~> check {
         inside(rejection) {
           case MalformedRequestContentRejection("Publication expected", _: DeserializationException) =>
         }
