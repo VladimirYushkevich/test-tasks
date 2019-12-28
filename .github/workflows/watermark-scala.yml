@@ -26,5 +26,5 @@ jobs:
       run: |
         docker image build -t watermark-scala .
         echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin
-        docker tag watermark-java yushkevich/watermark-scala:latest
+        docker tag watermark-scala yushkevich/watermark-scala:latest
         docker push yushkevich/watermark-scala:latest
