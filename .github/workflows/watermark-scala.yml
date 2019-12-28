@@ -21,6 +21,12 @@ jobs:
       working-directory: ./services/watermark-scala
       run: ./build.sh
 
+    - name: Report coverage
+      working-directory: ./services/watermark-scala
+      run: |
+        export CODECOV_TOKEN=${{secrets.CODECOV_TOKEN}}
+        bash <(curl -s https://codecov.io/bash)
+
     - name: Publish to Registry
       working-directory: ./services/watermark-scala
       run: |

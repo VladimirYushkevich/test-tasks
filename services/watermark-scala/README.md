@@ -1,4 +1,4 @@
-Watermark [![Build Status](https://github.com/VladimirYushkevich/test-tasks/workflows/watermark-scala/badge.svg)](https://github.com/VladimirYushkevich/test-tasks/actions?workflow=watermark-java)
+Watermark [![Build Status](https://github.com/VladimirYushkevich/test-tasks/workflows/watermark-scala/badge.svg)](https://github.com/VladimirYushkevich/test-tasks/actions?workflow=watermark-scala)
 =
 ### Description:
 
