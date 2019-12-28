@@ -32,5 +32,6 @@ lazy val testDependencies = Seq(
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
-coverageMinimum := 78
+coverageMinimum := 81
 coverageFailOnMinimum := true
+coverageEnabled.in(Test, test) := true

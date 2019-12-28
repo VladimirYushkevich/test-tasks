@@ -2,25 +2,28 @@ package com.yushkevich.watermark
 
 import akka.actor.{ActorRefFactory, ActorSystem, Status}
 import akka.http.scaladsl.marshalling.Marshal
+import akka.http.scaladsl.model.MediaTypes._
 import akka.http.scaladsl.model.{StatusCodes, _}
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{MalformedRequestContentRejection, Route}
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.testkit.TestActorRef
 import com.yushkevich.watermark.Commons._
 import com.yushkevich.watermark.actors.PublicationActor.{CreatePublication, DeletePublication, GetPublication, GetPublications}
 import com.yushkevich.watermark.actors.{PublicationActor, WatermarkActor}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{Inside, Matchers, WordSpec}
+import spray.json.DeserializationException
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class PublicationRoutesSpec
   extends WordSpec
-  with Matchers
-  with ScalaFutures
-  with ScalatestRouteTest
-  with PublicationProtocol {
+    with Matchers
+    with ScalaFutures
+    with ScalatestRouteTest
+    with Inside
+    with PublicationProtocol {
 
   private implicit def default(implicit system: ActorSystem): RouteTestTimeout = RouteTestTimeout(3.seconds)
 
@@ -196,6 +199,48 @@ class PublicationRoutesSpec
         status shouldBe StatusCodes.Created
         contentType shouldBe ContentTypes.`text/plain(UTF-8)`
         entityAs[String] shouldBe "bookTicketId"
+      }
+    }
+
+    "fail when request entity is not valid (topic is not correct)" in {
+      val notValidBookRequest = Post(s"$base", HttpEntity(`application/json`, """{"content":"a","title":"b","author":"c","{topic}":"MEDIA"}"""))
+      notValidBookRequest ~> routes(null) ~> check {
+        inside(rejection) {
+          case MalformedRequestContentRejection("Publication expected", _: DeserializationException) =>
+        }
+      }
+    }
+
+    "fail when request entity is not valid (fields are not correct)" in {
+      Post(s"$base", HttpEntity(`application/json`, """{"content":"a","title":"b","author":"c","notValid":"d","topic":"SCIENCE"}""")) ~> routes(null) ~> check {
+        inside(rejection) {
+          case MalformedRequestContentRejection("Publication expected", _: DeserializationException) =>
+        }
+      }
+    }
+
+    "fail when request entity is not valid (author is missing)" in {
+      Post(s"$base", HttpEntity(`application/json`, """{"content":"a","title":"b"}""")) ~> routes(null) ~> check {
+        inside(rejection) {
+          case MalformedRequestContentRejection("Object is missing required member 'author'", _: DeserializationException) =>
+        }
+      }
+    }
+
+    "fail when request entity is not valid (json is not valid)" in {
+      Post(s"$base", HttpEntity(`application/json`, """["content"]""")) ~> routes(null) ~> check {
+        inside(rejection) {
+          case MalformedRequestContentRejection("Deserialization problem [\"content\"]", _: DeserializationException) =>
+        }
+      }
+    }
+
+    "fail when request entity is not valid (topic json value is not valid)" in {
+      val notValidBookRequest = Post(s"$base", HttpEntity(`application/json`, """{"content":"a","title":"b","author":"c","topic":1}"""))
+      notValidBookRequest ~> routes(null) ~> check {
+        inside(rejection) {
+          case MalformedRequestContentRejection("Expected a value from enum Topic instead of 1", _: DeserializationException) =>
+        }
       }
     }
 

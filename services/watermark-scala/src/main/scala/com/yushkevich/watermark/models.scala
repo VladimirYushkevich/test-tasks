@@ -15,21 +15,21 @@ sealed trait Publication {
 }
 
 case class Book(
-  content: String,
-  author: String,
-  title: String,
-  watermark: Option[String],
-  ticketId: Option[String],
-  topic: Topic) extends Publication {
+                 content: String,
+                 author: String,
+                 title: String,
+                 watermark: Option[String],
+                 ticketId: Option[String],
+                 topic: Topic) extends Publication {
   override def getWatermarkProps: String = s"$content|$title|$author|$topic"
 }
 
 case class Journal(
-  content: String,
-  author: String,
-  title: String,
-  watermark: Option[String],
-  ticketId: Option[String]) extends Publication {
+                    content: String,
+                    author: String,
+                    title: String,
+                    watermark: Option[String],
+                    ticketId: Option[String]) extends Publication {
   override def getWatermarkProps: String = s"$content|$title|$author"
 }
 
@@ -57,21 +57,25 @@ trait PublicationProtocol extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val journalFormat: RootJsonFormat[Journal] = jsonFormat5(Journal)
 
   implicit object PublicationJsonFormat extends RootJsonFormat[Publication] {
-    def write(publication: Publication): JsValue =
+    def write(publication: Publication): JsValue = {
       publication match {
-        case p: Book => bookFormat.write(p)
-        case p: Journal => journalFormat.write(p)
-        case unrecognized => serializationError(s"Serialization problem $unrecognized")
+        case book: Book => bookFormat.write(book)
+        case journal: Journal => journalFormat.write(journal)
       }
+    }
 
-    def read(value: JsValue): Publication = value match {
-      case known: JsObject =>
-        if (known.fields.contains("topic")) {
-          bookFormat.read(known)
-        } else {
-          journalFormat.read(known)
-        }
-      case _ => deserializationError("Publication expected")
+    def read(value: JsValue): Publication = {
+      value match {
+        case known: JsObject =>
+          if (known.fields.contains("topic") && known.fields.keys.to[Set].diff(Set("content", "author", "title", "topic", "watermark", "ticketId")).isEmpty) {
+            bookFormat.read(known)
+          } else if (known.fields.keys.to[Set].diff(Set("content", "author", "title", "topic", "watermark", "ticketId")).isEmpty) {
+            journalFormat.read(known)
+          } else {
+            deserializationError("Publication expected")
+          }
+        case unrecognized => deserializationError(s"Deserialization problem $unrecognized")
+      }
     }
   }
 
