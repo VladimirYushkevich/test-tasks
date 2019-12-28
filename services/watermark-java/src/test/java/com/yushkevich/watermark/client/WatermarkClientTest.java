@@ -6,15 +6,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.hamcrest.number.OrderingComparison.lessThan;
+import static org.hamcrest.number.OrderingComparison.*;
 import static org.junit.Assert.assertThat;
 
 public class WatermarkClientTest {
 
     private WatermarkClient watermarkClient = new WatermarkClient();
 
-    private static final int WATERMARK_TIMEOUT = 100;
+    private static final int WATERMARK_TIMEOUT = 1000;
 
     @Before
     public void setUp() {
@@ -28,7 +27,7 @@ public class WatermarkClientTest {
         watermarkClient.createWatermark(Arrays.asList("book", "authorBook", "titleBook", "Science"));
         final int creationTime = (int) (System.currentTimeMillis() - start);
 
-        assertThat(creationTime, greaterThan(WATERMARK_TIMEOUT));
+        assertThat(creationTime, greaterThanOrEqualTo(WATERMARK_TIMEOUT));
         assertThat(creationTime, lessThan(WATERMARK_TIMEOUT + 200));
     }
 }
