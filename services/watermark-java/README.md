@@ -3,8 +3,8 @@ Watermark [![Build Status](https://github.com/VladimirYushkevich/test-tasks/work
 ### Description:
 
 This is a Spring boot application.
-It uses in memory h2database in the persistence layer with appropriate domain model. Database populated during start up 
-via corresponding **DataLoader** (and **TestDataLoader** for test profile).
+It uses in memory h2database in the persistence layer with appropriate domain model. Database populated during start up via 
+corresponding **DataLoader** (and **TestDataLoader** for test profile).
 All Watermark requests handled asynchronously by **WatermarkController** (Spring **DeferredResult** + rx **Observable**). 
 For CRUD operations with publications(book and journals) sync **WatermarkController** has been created.
 
