@@ -1,4 +1,3 @@
-
 lazy val akkaHttpVersion = "10.1.10"
 lazy val akkaVersion = "2.5.26"
 
@@ -10,7 +9,7 @@ lazy val root = (project in file("."))
     Defaults.itSettings,
     inThisBuild(List(
       organization := "com.yushkevich",
-      scalaVersion := "2.12.8"
+      scalaVersion := "2.13.1"
     )),
     name := "watermark-scala",
     libraryDependencies ++= Seq(
@@ -18,7 +17,7 @@ lazy val root = (project in file("."))
       "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "ch.qos.logback" % "logback-classic" % "1.2.3",
-      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
     ) ++ testDependencies
   )
 
@@ -26,12 +25,11 @@ lazy val testDependencies = Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion,
-  "org.scalatest" %% "scalatest" % "3.0.5",
+  "org.scalatest" %% "scalatest" % "3.0.8",
   "org.scalamock" %% "scalamock" % "4.4.0"
 ).map(_ % "it,test")
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
-coverageMinimum := 88
+coverageMinimum := 87
 coverageFailOnMinimum := true
-coverageEnabled.in(Test, test) := true

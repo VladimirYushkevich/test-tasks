@@ -67,9 +67,9 @@ trait PublicationProtocol extends SprayJsonSupport with DefaultJsonProtocol {
     def read(value: JsValue): Publication = {
       value match {
         case known: JsObject =>
-          if (known.fields.contains("topic") && known.fields.keys.to[Set].diff(Set("content", "author", "title", "topic", "watermark", "ticketId")).isEmpty) {
+          if (known.fields.contains("topic") && known.fields.keys.to(Set).diff(Set("content", "author", "title", "topic", "watermark", "ticketId")).isEmpty) {
             bookFormat.read(known)
-          } else if (known.fields.keys.to[Set].diff(Set("content", "author", "title", "topic", "watermark", "ticketId")).isEmpty) {
+          } else if (known.fields.keys.to(Set).diff(Set("content", "author", "title", "topic", "watermark", "ticketId")).isEmpty) {
             journalFormat.read(known)
           } else {
             deserializationError("Publication expected")

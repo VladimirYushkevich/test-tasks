@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  content-service:
+    image: yushkevich/watermark-scala:latest
+    container_name: watermark-scala
+    ports:
+      - 8082:8080

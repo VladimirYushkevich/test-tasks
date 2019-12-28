@@ -13,3 +13,18 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v1
+
+    - name: Setup SBT
+      uses: olafurpg/setup-scala@v5
+
+    - name: Build with SBT
+      working-directory: ./services/watermark-scala
+      run: ./build.sh
+
+    - name: Publish to Registry
+      working-directory: ./services/watermark-scala
+      run: |
+        docker image build -t watermark-scala .
+        echo '${{ secrets.DOCKER_PRIVATE_PASSWORD }}' | docker login --username='${{ secrets.DOCKER_PRIVATE_USERNAME }}' --password-stdin
+        docker tag watermark-java yushkevich/watermark-scala:latest
+        docker push yushkevich/watermark-scala:latest

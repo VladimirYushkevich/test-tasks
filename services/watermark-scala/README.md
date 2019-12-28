@@ -41,6 +41,23 @@ curl localhost:8080/api/v2/publications | jq
 curl -X DELETE localhost:8080/api/v2/publications/ddc0f84d-a4df-4f75-b79e-ac322cc755b5
 ```
 
+### Run service:
+Build it:
+```
+./build.sh
+```
+Run it:
+```
+scala target/scala-2.13/watermark-scala-assembly-0.1.0-SNAPSHOT.jar
+java -jar target/scala-2.13/watermark-scala-assembly-0.1.0-SNAPSHOT.jar
+```
+You can also run it from docker image (than port should be 8082 in examples):
+```
+docker-compose rmi yushkevich/watermark-scala
+docker-compose up
+docker-compose down
+```
+
 ### Environment
 
 macOS Catalina (version 10.15.2)  
