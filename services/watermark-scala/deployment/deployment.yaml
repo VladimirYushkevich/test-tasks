@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: watermark-scala
+  namespace: local
+spec:
+  selector:
+    matchLabels:
+      app: watermark-scala
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: watermark-scala
+    spec:
+      containers:
+        - name: watermark-scala
+          image: yushkevich/watermark-scala:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

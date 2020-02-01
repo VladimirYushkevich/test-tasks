@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  content-service:
+  watermark-scala:
     image: yushkevich/watermark-scala:latest
     container_name: watermark-scala
     ports:

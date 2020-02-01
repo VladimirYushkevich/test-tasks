@@ -51,15 +51,25 @@ Run it:
 scala target/scala-2.13/watermark-scala-assembly-0.1.0-SNAPSHOT.jar
 java -jar target/scala-2.13/watermark-scala-assembly-0.1.0-SNAPSHOT.jar
 ```
-You can also run it from docker image (than port should be 8082 in examples):
+You can also run it from docker image (than port should be 8082 in curl examples):
 ```
-docker-compose rmi yushkevich/watermark-scala
-docker-compose up
+docker-compose up --force-recreate watermark-scala
 docker-compose down
 ```
 
-### Environment
+### Kubernetes
+```
+./k8s-deployment.sh
+kubectl -n local port-forward svc/watermark-scala 8083:8083
+```
+Don't forget to change port to 8083 in curl examples.
 
+You can also access it via k8s service. To get service IP/Port run and add API path:
+```
+minikube -n local service watermark-scala
+```
+
+### Environment
 macOS Catalina (version 10.15.2)  
-Scala 2.12.8
-SBT 1.3.4
+Scala 2.13.1
+SBT 1.2.8
